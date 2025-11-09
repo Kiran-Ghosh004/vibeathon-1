@@ -12,7 +12,7 @@ const PublicRoute = ({ children }) => {
 
       // ✅ Valid token → redirect to AI or Home
       if (decoded.exp > currentTime) {
-        return <Navigate to="/home" replace />;
+        return <Navigate to="/" replace />;
       }
     } catch {
       localStorage.removeItem("token");

@@ -16,13 +16,13 @@ function App() {
   return (
     <Routes>
       {/* 🌿 Public Routes */}
-      <Route path="/" element={<PublicRoute><Intro /></PublicRoute>} />
+      <Route path="/intro" element={<PublicRoute><Intro /></PublicRoute>} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
       <Route path="/about" element={<About />} />
 
       {/* 🔒 Protected Routes */}
-      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
       <Route path="/ai" element={<ProtectedRoute><Ai /></ProtectedRoute>} />
       <Route path="/chapters" element={<ProtectedRoute><Chapters /></ProtectedRoute>} />
       <Route path="/chapter/:id" element={<ProtectedRoute><ChapterDetails /></ProtectedRoute>} />

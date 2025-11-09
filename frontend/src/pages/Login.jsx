@@ -25,7 +25,7 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       console.log("✅ Login successful:", res.data);
-      navigate("/home"); // redirect after login
+      navigate("/"); // redirect after login
     } catch (err) {
       console.error("❌ Login failed:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed. Try again.");
