@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Chapters from "./pages/Chapters";
 import ChapterDetails from "./pages/ChapterDetails";
 import ShlokaDetails from "./pages/ShlokaDetails";
-import Ai from "./pages/Ai"; // ✅ ensure this file exists
+import Ai from "./pages/Ai"; // 
 
 function App() {
   return (
