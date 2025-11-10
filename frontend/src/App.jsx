@@ -8,25 +8,24 @@ import Home from "./pages/Home";
 import Chapters from "./pages/Chapters";
 import ChapterDetails from "./pages/ChapterDetails";
 import ShlokaDetails from "./pages/ShlokaDetails";
-import Ai from "./pages/Ai"; // ✅ make sure this exists
-import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
+import Ai from "./pages/Ai"; // ✅ ensure this file exists
 
 function App() {
   return (
     <Routes>
-      {/* 🌿 Public Routes */}
-      <Route path="/intro" element={<PublicRoute><Intro /></PublicRoute>} />
-      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-      <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      {/* 🌿 Public Routes (now all accessible by default) */}
+      <Route path="/intro" element={<Intro />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route path="/about" element={<About />} />
-
-      {/* 🔒 Protected Routes */}
-      <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-      <Route path="/ai" element={<ProtectedRoute><Ai /></ProtectedRoute>} />
-      <Route path="/chapters" element={<ProtectedRoute><Chapters /></ProtectedRoute>} />
-      <Route path="/chapter/:id" element={<ProtectedRoute><ChapterDetails /></ProtectedRoute>} />
-      <Route path="/chapter/:chapterId/shlokas/:verseId" element={<ProtectedRoute><ShlokaDetails /></ProtectedRoute>} />
+      <Route path="/" element={<Home />} />
+      <Route path="/ai" element={<Ai />} />
+      <Route path="/chapters" element={<Chapters />} />
+      <Route path="/chapter/:id" element={<ChapterDetails />} />
+      <Route
+        path="/chapter/:chapterId/shlokas/:verseId"
+        element={<ShlokaDetails />}
+      />
 
       {/* 🚪 Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
