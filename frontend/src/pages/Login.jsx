@@ -8,17 +8,20 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      const res = await axios.post("https://vibeathon-zeta.vercel.app/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       // ✅ Store token & user in localStorage
       localStorage.setItem("token", res.data.token);
@@ -28,7 +31,13 @@ const Login = () => {
       navigate("/"); // redirect after login
     } catch (err) {
       console.error("❌ Login failed:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Login failed. Try again.");
+      setError(
+        err.response?.data?.error ||
+          err.response?.data?.message ||
+          "Invalid email or password."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,7 +49,7 @@ const Login = () => {
       }}
     >
       {/* ✨ Overlay */}
-      <div className="absolute inset-0 bg-linear-to-b from-black/45 via-black/35 to-black/65"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/35 to-black/65"></div>
 
       {/* 🌿 Login Form */}
       <div className="relative z-10 bg-white/10 backdrop-blur-md p-10 rounded-2xl shadow-lg max-w-md w-full mx-6 border border-[#c2995a]/40">
@@ -102,14 +111,20 @@ const Login = () => {
             </motion.p>
           )}
 
+          {/* Submit Button */}
           <motion.button
             type="submit"
-            className="mt-2 px-8 py-3 rounded-lg font-[Outfit] text-lg font-medium bg-[#c2995a] text-white shadow-[0_4px_20px_rgba(194,153,90,0.4)] hover:shadow-[0_6px_30px_rgba(194,153,90,0.6)] hover:-translate-y-1 transition-all duration-300"
+            disabled={loading}
+            className={`mt-2 px-8 py-3 rounded-lg font-[Outfit] text-lg font-medium text-white transition-all duration-300 ${
+              loading
+                ? "bg-[#c2995a]/70 cursor-not-allowed"
+                : "bg-[#c2995a] shadow-[0_4px_20px_rgba(194,153,90,0.4)] hover:shadow-[0_6px_30px_rgba(194,153,90,0.6)] hover:-translate-y-1"
+            }`}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </motion.button>
         </form>
 
@@ -142,7 +157,7 @@ const Login = () => {
         </motion.p>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-[#be945533] to-transparent blur-2xl pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#be945533] to-transparent blur-2xl pointer-events-none"></div>
     </div>
   );
 };

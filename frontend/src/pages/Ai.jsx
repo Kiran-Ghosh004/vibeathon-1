@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const Ai = () => {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState(() => {
-    // 🧠 Load saved chat history from localStorage
     const saved = localStorage.getItem("krishnaChat");
     return saved ? JSON.parse(saved) : [];
   });
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // 🪶 Auto-scroll to bottom when messages update
+  // 🪶 Auto-scroll + Save to localStorage
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     localStorage.setItem("krishnaChat", JSON.stringify(messages));
   }, [messages]);
 
+  // 🕉️ Ask Krishna
   const handleAskKrishna = async (e) => {
     e.preventDefault();
     if (!question.trim()) return;
@@ -28,28 +29,37 @@ const Ai = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://vibeathon-zeta.vercel.app/api/krishna/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
+      // 🔥 API call to backend
+      const { data } = await axios.post(
+        "http://localhost:5000/api/krishna/ask",
+        { question },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Optionally, you can include user token if required:
+            // Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-      const data = await res.json();
+      // 💬 Krishna's response
       const krishnaMessage = {
         role: "krishna",
         text:
-          data.response ||
-          "My dear seeker, silence too carries wisdom. Try asking again.",
-        reference: data.reference || "—",
+          data?.response?.trim() ||
+          "Even silence holds meaning, dear one. Try again with calmness.",
+        reference: data?.reference || "—",
       };
+
       setMessages((prev) => [...prev, krishnaMessage]);
     } catch (err) {
-      console.error("❌ Error talking to Krishna:", err);
+      console.error("❌ Krishna API Error:", err);
       setMessages((prev) => [
         ...prev,
         {
           role: "krishna",
-          text: "The divine connection seems faint, Arjuna. Try again after a moment of calm.",
+          text:
+            "The divine link trembles, Arjuna. Wait for a moment, then ask again with faith.",
           reference: "—",
         },
       ]);

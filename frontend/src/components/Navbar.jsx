@@ -21,7 +21,7 @@ const Navbar = () => {
   // ✅ Logout function
   const handleLogout = async () => {
     try {
-      await axios.post("https://vibeathon-zeta.vercel.app/api/auth/logout");
+      await axios.post("http://localhost:5000/api/auth/signup");
     } catch (err) {
       console.warn("Logout API error:", err.message);
     } finally {

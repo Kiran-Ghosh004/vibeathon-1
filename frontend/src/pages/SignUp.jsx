@@ -9,29 +9,36 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setLoading(true);
 
     try {
-      const res = await axios.post("https://vibeathon-zeta.vercel.app/api/auth/signup", {
-        name,
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        { name, email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       console.log("✅ Signup successful:", res.data);
-      setSuccess("Signup successful! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 2000);
+
+      // ✅ Store token & user in localStorage (instant login)
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // ✅ Redirect to home after short delay
+      setTimeout(() => navigate("/"), 800);
     } catch (err) {
       console.error("❌ Signup failed:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Something went wrong. Try again.");
+      setError(
+        err.response?.data?.error ||
+          err.response?.data?.message ||
+          "Something went wrong. Try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -44,12 +51,11 @@ const Signup = () => {
         backgroundImage: `url(${login})`,
       }}
     >
-      {/* ✨ Golden Overlay */}
-      <div className="absolute inset-0 bg-linear-to-b from-black/45 via-black/30 to-black/60"></div>
+      {/* ✨ Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/30 to-black/60"></div>
 
       {/* 🌿 Signup Form */}
       <div className="relative z-10 bg-white/10 backdrop-blur-md p-10 rounded-2xl shadow-lg max-w-md w-full mx-6 border border-[#c2995a]/40">
-        {/* Title */}
         <h1
           className="sanskrit-text text-3xl md:text-4xl font-semibold text-white mb-3"
           style={{
@@ -123,19 +129,7 @@ const Signup = () => {
             </motion.p>
           )}
 
-          {/* Success Message */}
-          {success && (
-            <motion.p
-              className="text-green-400 text-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-            >
-              {success}
-            </motion.p>
-          )}
-
-          {/* Signup Button */}
+          {/* Submit Button */}
           <motion.button
             type="submit"
             disabled={loading}
@@ -181,7 +175,7 @@ const Signup = () => {
       </div>
 
       {/* 🌕 Bottom Glow */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-[#c89d5c33] to-transparent blur-2xl pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#c89d5c33] to-transparent blur-2xl pointer-events-none"></div>
     </div>
   );
 };
